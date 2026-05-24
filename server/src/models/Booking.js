@@ -1,26 +1,82 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const bookingSchema = new mongoose.Schema(
   {
-    userId:     { type: mongoose.Schema.Types.ObjectId, ref: 'User',    required: true },
-    routeId:    { type: mongoose.Schema.Types.ObjectId, ref: 'Route',   required: true },
-    seats:      { type: Number, required: true, min: 1 },
-    travelDate: { type: Date,   required: true },
-    totalFare:  { type: Number, required: true },
-    status:     { type: String, enum: ['pending','confirmed','cancelled','completed'], default: 'pending' },
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
+
+    routeId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Route",
+      required: true,
+    },
+
+    shipmentType: {
+      type: String,
+      enum: ["raw_material", "finished_goods", "equipment"],
+      default: "finished_goods",
+    },
+
+    productType: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+
+    batchNumber: {
+      type: String,
+      trim: true,
+    },
+
+    loadWeightKg: {
+      type: Number,
+      required: true,
+      min: 1,
+    },
+
+    priority: {
+      type: String,
+      enum: ["low", "medium", "high", "urgent"],
+      default: "medium",
+    },
+
+    dispatchDate: {
+      type: Date,
+      required: true,
+    },
+
+    assignedVehicle: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Vehicle",
+    },
+
+    assignedDriver: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
+
+    notes: {
+      type: String,
+      trim: true,
+    },
+
+    status: {
+      type: String,
+      enum: [
+        "pending",
+        "scheduled",
+        "loading",
+        "in_transit",
+        "delivered",
+        "cancelled",
+      ],
+      default: "pending",
+    },
   },
   { timestamps: true }
 );
 
-// Returns total booked seats for a route on a date (excludes cancelled)
-bookingSchema.statics.bookedSeats = async function (routeId, travelDate) {
-  const start = new Date(travelDate); start.setHours(0, 0, 0, 0);
-  const end   = new Date(travelDate); end.setHours(23, 59, 59, 999);
-  const result = await this.aggregate([
-    { $match: { routeId: new mongoose.Types.ObjectId(routeId), travelDate: { $gte: start, $lte: end }, status: { $ne: 'cancelled' } } },
-    { $group: { _id: null, total: { $sum: '$seats' } } },
-  ]);
-  return result[0]?.total || 0;
-};
-
-module.exports = mongoose.model('Booking', bookingSchema);
+module.exports = mongoose.model("Booking", bookingSchema);

@@ -1,6 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
-import { AuthProvider } from "./context/AuthContext";
+import { AuthProvider } from "./context/AuthContext.jsx";
 import ProtectedRoute from "./components/ProtectedRoute";
 
 import VehicleRoad from "./components/VehicleRoad";
@@ -14,8 +14,13 @@ import MyBookings from "./pages/MyBookings";
 
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminVehicles from "./pages/admin/AdminVehicles";
+import AdminFleet from "./pages/admin/AdminFleet";
+import AdminShipments from "./pages/admin/AdminShipments";
 import AdminRoutes from "./pages/admin/AdminRoutes";
 import AdminBookings from "./pages/admin/AdminBookings";
+import TransportBoard from "./pages/admin/TransportBoard";
+import DriverDashboard from "./pages/driver/DriverDashboard";
+import DriverShipment from "./pages/driver/DriverShipment";
 
 export default function App() {
   return (
@@ -59,6 +64,24 @@ export default function App() {
             }
           />
 
+          <Route
+            path="/driver"
+            element={
+              <ProtectedRoute>
+                <DriverDashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/driver/shipments/:id"
+            element={
+              <ProtectedRoute>
+                <DriverShipment />
+              </ProtectedRoute>
+            }
+          />
+          <Route path="/drivers" element={<Navigate to="/driver" replace />} />
+
           {/* Admin */}
           <Route
             path="/admin"
@@ -77,6 +100,22 @@ export default function App() {
             }
           />
           <Route
+            path="/admin/fleet"
+            element={
+              <ProtectedRoute adminOnly>
+                <AdminFleet />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/shipments"
+            element={
+              <ProtectedRoute adminOnly>
+                <AdminShipments />
+              </ProtectedRoute>
+            }
+          />
+          <Route
             path="/admin/routes"
             element={
               <ProtectedRoute adminOnly>
@@ -89,6 +128,14 @@ export default function App() {
             element={
               <ProtectedRoute adminOnly>
                 <AdminBookings />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/transport"
+            element={
+              <ProtectedRoute adminOnly>
+                <TransportBoard />
               </ProtectedRoute>
             }
           />

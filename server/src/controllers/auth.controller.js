@@ -5,10 +5,28 @@ const register = async (req, res, next) => {
   try {
     const { name, email, password } = req.body;
 
-    const exists = await User.findOne({ email: email.toLowerCase() });
-    if (exists) return res.status(400).json({ message: "Email already registered" });
+    // Validation
+    if (!name || !email || !password) {
+      return res.status(400).json({
+        message: "Name, email and password are required",
+      });
+    }
 
-    const user = await User.create({ name, email, password });
+    const exists = await User.findOne({
+      email: email.toLowerCase(),
+    });
+
+    if (exists) {
+      return res.status(400).json({
+        message: "Email already registered",
+      });
+    }
+
+    const user = await User.create({
+      name,
+      email,
+      password,
+    });
 
     const token = signToken(user._id);
 
@@ -30,11 +48,30 @@ const login = async (req, res, next) => {
   try {
     const { email, password } = req.body;
 
-    const user = await User.findOne({ email: email.toLowerCase() }).select("+password");
-    if (!user) return res.status(400).json({ message: "Invalid credentials" });
+    // Validation
+    if (!email || !password) {
+      return res.status(400).json({
+        message: "Email and password are required",
+      });
+    }
+
+    const user = await User.findOne({
+      email: email.toLowerCase(),
+    }).select("+password");
+
+    if (!user) {
+      return res.status(400).json({
+        message: "Invalid credentials",
+      });
+    }
 
     const ok = await user.comparePassword(password);
-    if (!ok) return res.status(400).json({ message: "Invalid credentials" });
+
+    if (!ok) {
+      return res.status(400).json({
+        message: "Invalid credentials",
+      });
+    }
 
     const token = signToken(user._id);
 
@@ -54,10 +91,16 @@ const login = async (req, res, next) => {
 
 const me = async (req, res, next) => {
   try {
-    res.json({ user: req.user });
+    res.json({
+      user: req.user,
+    });
   } catch (err) {
     next(err);
   }
 };
 
-module.exports = { register, login, me };
+module.exports = {
+  register,
+  login,
+  me,
+};

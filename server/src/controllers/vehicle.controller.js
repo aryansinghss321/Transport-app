@@ -11,8 +11,18 @@ const createVehicle = async (req, res, next) => {
 
 const getVehicles = async (req, res, next) => {
   try {
-    const vehicles = await Vehicle.find().sort({ createdAt: -1 });
+    const vehicles = await Vehicle.find().populate("assignedDriver", "name email phone role").sort({ createdAt: -1 });
     res.json(vehicles);
+  } catch (err) {
+    next(err);
+  }
+};
+
+const getVehicle = async (req, res, next) => {
+  try {
+    const vehicle = await Vehicle.findById(req.params.id).populate("assignedDriver", "name email phone role");
+    if (!vehicle) return res.status(404).json({ message: "Vehicle not found" });
+    res.json(vehicle);
   } catch (err) {
     next(err);
   }
@@ -20,10 +30,7 @@ const getVehicles = async (req, res, next) => {
 
 const updateVehicle = async (req, res, next) => {
   try {
-    const vehicle = await Vehicle.findByIdAndUpdate(req.params.id, req.body, {
-      new: true,
-      runValidators: true,
-    });
+    const vehicle = await Vehicle.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
     if (!vehicle) return res.status(404).json({ message: "Vehicle not found" });
     res.json(vehicle);
   } catch (err) {
@@ -41,4 +48,10 @@ const deleteVehicle = async (req, res, next) => {
   }
 };
 
-module.exports = { createVehicle, getVehicles, updateVehicle, deleteVehicle };
+module.exports = {
+  createVehicle,
+  getVehicles,
+  getVehicle,
+  updateVehicle,
+  deleteVehicle,
+};

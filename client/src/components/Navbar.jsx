@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../context/useAuth';
 import toast from 'react-hot-toast';
 
 export default function Navbar() {
@@ -13,7 +13,10 @@ export default function Navbar() {
   const adminLinks = [
     { to: '/admin',           label: 'Dashboard' },
     { to: '/admin/vehicles',  label: 'Vehicles' },
-    { to: '/admin/routes',    label: 'Routes' },
+     { to: '/admin/fleet',       label: '🚛 Fleet' },
+    { to: '/driver',     label: '👤 Drivers' },
+     { to: '/admin/shipments',   label: '📦 Shipments' },
+     { to: '/admin/routes',    label: 'Routes' },
     { to: '/admin/bookings',  label: 'Bookings' },
   ];
   const userLinks = [
