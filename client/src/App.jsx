@@ -3,6 +3,9 @@ import { Toaster } from "react-hot-toast";
 import { AuthProvider } from "./context/AuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";
 
+import VehicleRoad from "./components/VehicleRoad";
+import SmokeEffect from "./components/SmokeEffect";
+
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import UserDashboard from "./pages/UserDashboard";
@@ -19,6 +22,11 @@ export default function App() {
     <AuthProvider>
       <BrowserRouter>
         <Toaster position="top-right" />
+
+        {/* Visible on every page */}
+        <VehicleRoad />
+        <SmokeEffect />
+
         <Routes>
           <Route path="/" element={<Navigate to="/login" replace />} />
 

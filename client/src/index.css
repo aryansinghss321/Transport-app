@@ -1,3 +1,13 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Ensure the app layout is stable */
+html, body, #root {
+  height: 100%;
+}
+
+/* IMPORTANT: leave space for the road bar */
+body {
+  padding-bottom: 90px;
+}
